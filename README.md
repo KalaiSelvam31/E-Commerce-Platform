@@ -16,6 +16,7 @@ Supports user authentication, cart management, order placement, and product list
 - ✅ Delete Product
 - ✅ Add Product
 - ✅ Entity Relationships with JPA (`User`, `Product`, `Cart`, `Order`, `OrderItem`)
+- ✅ Stock validation during Add to Cart (prevents out-of-stock items from being added)
 
 ---
 
