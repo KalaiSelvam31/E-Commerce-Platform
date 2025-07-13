@@ -1,5 +1,5 @@
 
-# 🛒 ShopEase - E-Commerce Backend
+# 🛒  E-Commerce Backend
 
 A Spring Boot-based REST API backend for an e-commerce application.  
 Supports user authentication, cart management, order placement, and product listing.
