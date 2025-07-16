@@ -1,6 +1,5 @@
 package com.example.test.Model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,14 +11,14 @@ import lombok.Data;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productId;
 
     private String productName;
     private int productPrice;
     private String category;
-    private  boolean inStock;
-    private String Color;
+    private boolean inStock;
 
+    private String Color;
 
 }

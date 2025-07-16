@@ -1,8 +1,7 @@
 package com.example.test.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -10,15 +9,18 @@ import lombok.Data;
 public class OrderItem {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int OrderItemId;
 
     @ManyToOne
     private Product product;
 
     @ManyToOne
+    @JsonBackReference
     private Orders order;
 
     private int quanitity;
 
     private int price;
+
 }

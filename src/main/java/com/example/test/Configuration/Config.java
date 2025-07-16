@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -31,18 +34,41 @@ public class Config {
     JwtFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain filter(HttpSecurity http)throws Exception{
+    public SecurityFilterChain filter(HttpSecurity http) throws Exception {
         return http
-                .csrf(customizer->customizer.disable())
-                .authorizeHttpRequests(auth->auth
-                                .anyRequest().permitAll())
-                .sessionManagement(sees->sees.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults()) // Enable CORS
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/Register",
+                                "/Login"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests
+                        .anyRequest().permitAll()
+                )
+                .sessionManagement(sees -> sees.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authenticationProvider(Auth())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .build();
-
     }
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**") // Apply CORS to all paths
+                    .allowedOriginPatterns("*") // <--- CHANGE THIS LINE: Use allowedOriginPatterns instead of allowedOrigins
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow common HTTP methods
+                    .allowedHeaders("*") // Allow all headers
+                    .allowCredentials(true) // Allow sending cookies/auth headers
+                    .maxAge(3600); // Cache pre-flight response for 1 hour
+        }
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
