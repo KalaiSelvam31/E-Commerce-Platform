@@ -45,8 +45,6 @@ src/main/java/com/example/test/
 └── Advice/Exception/   → Global exception handling
 
 
----
-
 ## ⚙️ Technologies Used
 
 - **Java 21** & **Spring Boot 3.5.3**
