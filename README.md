@@ -29,12 +29,19 @@ A robust, full-featured REST API backend for the **NexusMart** e-commerce platfo
 
 
 src/main/java/com/example/test/
+
 ├── Controller/         → REST endpoints for all features
+|
 ├── Model/              → JPA Entity classes (Users, Product, Cart, etc.)
+|
 ├── Service/            → Business logic for all operations
+|
 ├── Repository/         → Spring Data JPA Repositories
+|
 ├── Filter/             → JWT authentication filter
+|
 ├── Configuration/      → Spring Security and application configuration
+|
 └── Advice/Exception/   → Global exception handling
 
 
