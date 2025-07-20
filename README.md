@@ -45,20 +45,7 @@ Robust Error Handling: Global exception handlers for common issues like product 
 
 📁 Project Structure
 src/main/java/com/example/test/
-
-├── Controller/         → REST endpoints for all features
-|
-├── Model/              → JPA Entity classes (Users, Product, Cart, etc.)
-|
-├── Service/            → Business logic for all operations
-|
-├── Repository/         → Spring Data JPA Repositories
-|
-├── Filter/             → JWT authentication filter
-|
-├── Configuration/      → Spring Security and application configuration
-|
-└── Advice/Exception/   → Global exception handling
+├── Controller/ → REST endpoints for all features | ├── Model/ → JPA Entity classes | ├── Service/ → Business logic | ├── Repository/ → Spring Data JPA Repositories | ├── Filter/ → JWT authentication filter | ├── Configuration/ → Spring Security and application configuration | └── Advice/Exception/ → Global exception handling
 
 ⚙️ Technologies Used
 Java 21 & Spring Boot 3.5.3
