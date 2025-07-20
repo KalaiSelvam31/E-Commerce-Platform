@@ -1,207 +1,192 @@
-🚀 NexusMart E-Commerce Backend
-Last Updated: July 20, 2025
+# 🚀 NexusMart E-Commerce Backend
 
-A robust, full-featured REST API backend for the NexusMart e-commerce platform, built with Spring Boot. It provides a complete set of services for user management, product catalog administration, shopping cart operations, and order processing.
+**Last Updated:** July 20, 2025
 
-✨ Latest Feature: Product Review System
-Submit Reviews: Users can submit a star rating and text review for any product they have purchased.
+A robust, full-featured **REST API backend** for the **NexusMart** e-commerce platform, built with **Spring Boot**. This backend offers comprehensive services for **user authentication**, **product catalog management**, **shopping cart operations**, **order processing**, and a brand-new **product review system** with sentiment analysis.
 
-View Reviews: All users can view the list of reviews for any product in the catalog.
+---
 
-Sentiment Analysis: Integrated a Python-based sentiment analysis service to automatically categorize reviews as positive, negative, or neutral.
+## ✨ Latest Feature: Product Review System
 
-✅ Features Implemented
-User Authentication: Secure user registration and login using JWT (JSON Web Tokens).
+* **Submit Reviews:** Users can submit star ratings and text reviews for purchased products.
+* **View Reviews:** Publicly viewable reviews per product.
+* **Sentiment Analysis:** Python-based service categorizes reviews as *positive*, *negative*, or *neutral*.
 
-Role-Based Access Control: Distinct roles for User and Admin, with endpoints protected using @PreAuthorize.
+---
 
-Full Product Management (Admin): Admins can add new products and update existing product details, including price and stock status.
+## ✅ Features Overview
 
-Advanced Shopping Cart:
+### 🛡️ Authentication & Authorization
 
-Add items to the cart.
+* **JWT-based Authentication:** Secure login & stateless session management.
+* **Role-Based Access Control:** User & Admin roles with protected endpoints using `@PreAuthorize`.
 
-View all items in the cart.
+### 🛒 Product & Cart Management
 
-Update the quantity of items in the cart.
+* **Product Catalog (Admin):**
 
-Remove items from the cart.
+  * Add, update products with price & stock control.
 
-Complete Order Lifecycle:
+* **Product Discovery:**
 
-Place an order from the items in the cart (Checkout).
+  * List all products.
+  * Search products with partial match.
 
-Automatically clears the cart after a successful checkout.
+* **Advanced Shopping Cart:**
 
-View a detailed history of all past orders for a user.
+  * Add/view/update/remove items in cart.
 
-Product Discovery:
+### 📦 Order Management
 
-Fetch a list of all available products.
+* **Checkout Flow:**
 
-Search for products by name with partial matching.
+  * Converts cart to order.
+  * Automatically clears cart post-purchase.
+* **Order History:**
 
-Robust Error Handling: Global exception handlers for common issues like product not found, out of stock, and invalid input.
+  * Full order tracking per user.
 
-📁 Project Structure
+### 📝 Product Reviews
+
+* Submit & view product reviews.
+* Reviews linked to user purchases and analyzed for sentiment.
+
+### ⚠️ Robust Error Handling
+
+* Global exception handling for:
+
+  * Product not found
+  * Out of stock
+  * Invalid input, etc.
+
+---
+
+## 📁 Project Structure
+
+```
 src/main/java/com/example/test/
-├── Controller/ → REST endpoints for all features | ├── Model/ → JPA Entity classes | ├── Service/ → Business logic | ├── Repository/ → Spring Data JPA Repositories | ├── Filter/ → JWT authentication filter | ├── Configuration/ → Spring Security and application configuration | └── Advice/Exception/ → Global exception handling
+├── Controller/       # REST APIs
+├── Model/            # JPA entities
+├── Service/          # Business logic
+├── Repository/       # Spring Data JPA
+├── Filter/           # JWT authentication
+├── Configuration/    # Security & App configs
+└── Advice/Exception/ # Global exception handlers
+```
 
-⚙️ Technologies Used
-Java 21 & Spring Boot 3.5.3
+---
 
-Spring Security: For authentication and authorization.
+## ⚙️ Tech Stack
 
-Spring Data JPA & Hibernate: For database interaction.
+| Technology        | Description                     |
+| ----------------- | ------------------------------- |
+| Java 21           | Core language                   |
+| Spring Boot 3.5.3 | Backend framework               |
+| Spring Security   | Authentication & Authorization  |
+| Spring Data JPA   | ORM layer                       |
+| Hibernate         | ORM provider                    |
+| MySQL             | Relational database             |
+| JWT (jjwt)        | Token-based authentication      |
+| Lombok            | Boilerplate code reduction      |
+| Maven             | Build and dependency management |
 
-MySQL: Relational database.
+---
 
-Lombok: To reduce boilerplate code.
+## 📌 API Endpoints
 
-JWT (jjwt): For stateless API authentication.
+> **Base URL:** `http://localhost:8080`
 
-Maven: For dependency management.
+### 🔐 Authentication
 
-📌 API Endpoint Documentation
-The base URL is http://localhost:8080.
+| Method | Endpoint    | Description                    |
+| ------ | ----------- | ------------------------------ |
+| POST   | `/Register` | Register a new user            |
+| POST   | `/Login`    | Authenticate and get JWT token |
 
-Authentication
-Method
+---
 
-Endpoint
+### 📦 Products (Public Access)
 
-Description
+| Method | Endpoint                | Description                     |
+| ------ | ----------------------- | ------------------------------- |
+| GET    | `/getProduct`           | Retrieve all available products |
+| GET    | `/Search/{productname}` | Search products by name         |
 
-POST
+---
 
-/Register
+### 🛒 Cart Management
 
-Registers a new user with User role.
+| Method | Endpoint                                      | Description                     |
+| ------ | --------------------------------------------- | ------------------------------- |
+| GET    | `/viewCart/{userid}`                          | View all items in user’s cart   |
+| POST   | `/addToCart/{userid}/{productid}`             | Add product to cart             |
+| POST   | `/updateCart/{userid}/{productid}/{quantity}` | Update product quantity in cart |
+| POST   | `/removeCart/{userid}/{productid}`            | Remove product from cart        |
 
-POST
+---
 
-/Login
+### 📥 Orders & Reviews
 
-Authenticates a user and returns a JWT.
+| Method | Endpoint                        | Description                           |
+| ------ | ------------------------------- | ------------------------------------- |
+| POST   | `/Checkout/{userid}`            | Place an order from cart              |
+| GET    | `/orderDetails/{userid}`        | View user’s order history             |
+| POST   | `/review/{productid}/{orderid}` | Submit a review for purchased product |
+| GET    | `/review/{productid}`           | View all reviews for a product        |
 
-Products (Public)
-Method
+---
 
-Endpoint
+### 🛠️ Admin Panel (Requires Admin Role)
 
-Description
+| Method | Endpoint                                     | Description                   |
+| ------ | -------------------------------------------- | ----------------------------- |
+| POST   | `/addProducts`                               | Add a new product             |
+| POST   | `/updateProducts/{productid}/{bool}/{price}` | Update stock status and price |
 
-GET
+---
 
-/getProduct
+## 🗃️ Entity Overview
 
-Retrieves a list of all products.
+| Entity      | Description                                       |
+| ----------- | ------------------------------------------------- |
+| `Users`     | Stores user credentials and roles                 |
+| `Product`   | Product details (name, price, stock, etc.)        |
+| `Cart`      | Temporary storage for a user’s selected items     |
+| `Orders`    | Finalized purchase, includes multiple order items |
+| `OrderItem` | Line items for each product within an order       |
+| `Reviews`   | Ratings & feedback tied to orders & products      |
 
-GET
+---
 
-/Search/{productname}
+## 🧩 Known Issues & Upcoming Features
 
-Searches for products by name.
+* 🔄 **Payment Gateway Integration**
+  Add Stripe or Razorpay to enable actual transactions.
 
-Cart Management
-Method
+* 👤 **User Profile Management**
+  Allow users to update personal info and view profiles.
 
-Endpoint
+* 🔍 **Advanced Product Search**
+  Filter by category, price range, availability, etc.
 
-Description
+---
 
-GET
+## 🏁 How to Run
 
-/viewCart/{userid}
+1. Ensure **MySQL** is running and a database named `test` is created.
+2. Update the `application.properties` file with your DB credentials.
+3. Run using Maven:
 
-Views all items in a user's cart.
-
-POST
-
-/addToCart/{userid}/{productid}
-
-Adds a product to the user's cart.
-
-POST
-
-/updateCart/{userid}/{productid}/{quantity}
-
-Updates the quantity of a product in the cart.
-
-POST
-
-/removeCart/{userid}/{productid}
-
-Removes a product from the user's cart.
-
-Orders & Reviews
-Method
-
-Endpoint
-
-Description
-
-POST
-
-/Checkout/{userid}
-
-Creates an order from the user's cart.
-
-GET
-
-/orderDetails/{userid}
-
-Retrieves a user's complete order history.
-
-POST
-
-/review/{productid}/{orderid}
-
-Submits a new review for a product from a specific order.
-
-GET
-
-/review/{productid}
-
-Gets all reviews for a specific product.
-
-Admin Panel
-(Requires Admin role)
-| Method | Endpoint                                   | Description                               |
-| :---   | :---                                       | :---                                      |
-| POST | /addProducts                             | Adds a new product to the store.          |
-| POST | /updateProducts/{productid}/{bool}/{price} | Updates a product's stock status and price. |
-
-📦 Entities
-Users: Stores user credentials and roles (User, Admin).
-
-Product: Represents items available for purchase.
-
-Cart: A user’s temporary holding area for products before checkout.
-
-Orders: Represents a finalized purchase, linked to a user.
-
-OrderItem: Represents a single line item within an order, linking Orders and Product.
-
-Reviews: Stores user-submitted reviews, linked to an Order and a Product.
-
-💡 Known Issues & Future Improvements
-Payment Gateway: Integrate a payment provider like Stripe or Razorpay to handle actual transactions during checkout.
-
-User Profile: Add endpoints for users to view and update their own profile information.
-
-Advanced Search: Implement more advanced filtering and sorting options for products (e.g., by category, price range).
-
-🏁 Running the App
-Ensure MySQL is running and a database named test has been created.
-
-Update the spring.datasource properties in application.properties if your credentials differ.
-
-Run the application using Maven:
-
+```bash
 mvn spring-boot:run
+```
 
-The application will start at http://localhost:8080/.
+4. Visit: `http://localhost:8080`
 
-🧠 Author
-KalaiSelvam M — Full-Stack Developer in Progress 🚀
+---
+
+## 👨‍💻 Author
+
+**KalaiSelvam M**
+*Full-Stack Developer in Progress* 🚀
+
