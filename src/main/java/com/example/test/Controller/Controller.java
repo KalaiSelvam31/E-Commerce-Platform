@@ -1,10 +1,7 @@
 package com.example.test.Controller;
 
 import com.example.test.Exception.ProductNotFound;
-import com.example.test.Model.Cart;
-import com.example.test.Model.CartDto;
-import com.example.test.Model.Product;
-import com.example.test.Model.Users;
+import com.example.test.Model.*;
 import com.example.test.Repository.CartRepo;
 import com.example.test.Repository.ProductRepo;
 import com.example.test.Repository.UserRepo;
@@ -127,5 +124,18 @@ public class Controller {
     @GetMapping("/orderDetails/{userid}")
     public ResponseEntity<?> orderDetails(@PathVariable int userid) {
         return storeService.orderDetails(userid);
+    }
+
+    @PostMapping("/review/{productid}/{orderid}")
+    public ResponseEntity<?>Review(@RequestBody @Valid ReviewDTO reviewDTO,@PathVariable int productid,@PathVariable int orderid){
+        Reviews reviews = new Reviews();
+        reviews.setText(reviewDTO.getText());
+        reviews.setRating(reviewDTO.getRating());
+        return storeService.Review(reviews,productid,orderid);
+    }
+
+    @GetMapping("/review/{product}")
+    public ResponseEntity<?> getReview(@PathVariable int product){
+        return storeService.getReview(product);
     }
 }

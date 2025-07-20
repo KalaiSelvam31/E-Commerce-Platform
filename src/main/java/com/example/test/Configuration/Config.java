@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -40,13 +41,11 @@ public class Config {
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/Register",
-                                "/Login"
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(sees -> sees.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
@@ -60,12 +59,12 @@ public class Config {
 
         @Override
         public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**") // Apply CORS to all paths
-                    .allowedOriginPatterns("*") // <--- CHANGE THIS LINE: Use allowedOriginPatterns instead of allowedOrigins
-                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow common HTTP methods
-                    .allowedHeaders("*") // Allow all headers
-                    .allowCredentials(true) // Allow sending cookies/auth headers
-                    .maxAge(3600); // Cache pre-flight response for 1 hour
+            registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .maxAge(3600);
         }
     }
 
@@ -85,5 +84,9 @@ public class Config {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
+    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

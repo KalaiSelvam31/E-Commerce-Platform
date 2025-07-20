@@ -3,16 +3,9 @@ package com.example.test.Service;
 import com.example.test.Exception.NoProductFoundinUserCart;
 import com.example.test.Exception.OutofStock;
 import com.example.test.Exception.ProductNotFound;
-import com.example.test.Model.Cart;
-import com.example.test.Model.Orders;
-import com.example.test.Model.OrderItem;
-import com.example.test.Model.OrdersResponseDTO;
-import com.example.test.Model.Product;
-import com.example.test.Model.Users;
-import com.example.test.Repository.CartRepo;
-import com.example.test.Repository.OrdersRepo;
-import com.example.test.Repository.ProductRepo;
-import com.example.test.Repository.UserRepo;
+import com.example.test.Model.*;
+import com.example.test.Repository.*;
+import jakarta.persistence.criteria.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +29,10 @@ public class StoreService {
     OrdersRepo ordersRepo;
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private ReviewsRepo reviewsRepo;
+    @Autowired
+    private SentimentService sentimentService;
 
     public ResponseEntity<String> addToCart(int userid, int productid) {
         Users user = userRepo.findById(userid).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -129,14 +126,15 @@ public class StoreService {
         List<OrdersResponseDTO> output = new ArrayList<>();
         for (Orders o : orders) {
             OrdersResponseDTO op = new OrdersResponseDTO();
+            op.setOrderid(o.getOrderId());
             op.setDate(o.getCreatedAt());
             op.setPrice(o.getTotalAmount());
-            op.setProductname(o.getItemList()); // This will return OrderItem objects, likely needs to be mapped to product names
+            op.setProductname(o.getItemList());
             output.add(op);
 
         }
-
-        return new ResponseEntity<>(output, HttpStatus.FOUND);
+        
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateProduct(int productid, boolean stock, int price) {
@@ -157,5 +155,23 @@ public class StoreService {
         Cart cart = cartRepo.findByProductAndUser(product,user);
         cartRepo.delete(cart);
             return new ResponseEntity<>("Product Removed",HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> Review(Reviews reviews,int productid,int orderid ) {
+        System.out.println(orderid+" "+productid);
+        String sentimentResult = sentimentService.getSentiment(reviews.getText());
+
+        reviews.setCategory(sentimentResult);
+        Orders order = ordersRepo.findById(orderid).orElseThrow(()-> new ProductNotFound("No such order found"));
+        reviews.setOrders(order);
+        reviews.setProductid(productid);
+        if(reviewsRepo.findByOrders(order).isPresent()) throw new ProductNotFound("Review Already Found");
+        reviewsRepo.save(reviews);
+        return ResponseEntity.ok("Thanks for the review");
+    }
+
+    public ResponseEntity<?> getReview(int productid) {
+    List<Reviews> reviews = reviewsRepo.findByProductid(productid).orElseThrow(()-> new ProductNotFound("Be First to Review our product."));
+        return ResponseEntity.ok(reviews);
     }
 }
